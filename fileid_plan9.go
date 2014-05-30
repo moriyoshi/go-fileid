@@ -11,7 +11,7 @@ type FileId struct {
 }
 
 func GetFileId(path string, followSymlink bool) (FileId, error) {
-	statBuf := make([]byte, syscall.STATFIXLEN + 16 * 4 + 127 & ^128)
+	statBuf := make([]byte, syscall.STATFIXLEN + (16 * 4 + 127) & ^128)
 	n, err := syscall.Stat(path, statBuf)
 	if err != nil {
 		return FileId{}, err
