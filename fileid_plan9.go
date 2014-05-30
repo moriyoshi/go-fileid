@@ -5,9 +5,11 @@ package fileid
 import "syscall"
 
 type FileId struct {
-	Qid          syscall.Qid
-	Type         uint16
-	Dev          uint32
+	Path       uint64
+	Vers       uint32
+	FileType   uint8
+	ServerType uint16
+	Dev        uint32
 }
 
 func GetFileId(path string, followSymlink bool) (FileId, error) {
@@ -34,9 +36,9 @@ func GetFileId(path string, followSymlink bool) (FileId, error) {
 	if err != nil {
 		return FileId{}, err
 	}
-	return FileId { dirInfo.Qid, dirInfo.Type, dirInfo.Dev }, nil
+	return FileId { dirInfo.Qid.Path, dirInfo.Qid.Vers, dirInfo.Qid.Type, dirInfo.Type, dirInfo.Dev }, nil
 }
 
 func IsSame(a, b FileId) bool {
-	return a.Type == b.Type && a.Dev == b.Dev && a.Qid.Path == b.Qid.Path
+	return a.ServerType == b.ServerType && a.Dev == b.Dev && a.Path == b.Path
 }
